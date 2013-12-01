@@ -36,11 +36,10 @@ Puppet::Type.newtype(:sqltable) do
 
       Puppet::Util.execute(command).split("\n").each do |line|
         items = line.split("\t")
-        name = "%s.%s.%s" % [ database , table , items[0] ]
-        obj = Puppet::Resource.new('sltable', name )
-        obj[:ensure] = :present
-        propnames.zip( items ).each{ |k,v| obj[k] = v }
-        resources << obj
+        resources << new( :name => "%s.%s.%s" % [ database , table , items[0] ] ,
+                          :key => items[0] ,
+                          :value => items[1] ,
+                          :description => items[2] )
       end
 
     end
