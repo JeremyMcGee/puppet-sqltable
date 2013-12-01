@@ -42,6 +42,12 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     !(@property_hash[:ensure] == :absent or @property_hash[:ensure].nil?)
   end
 
+  def destroy
+    database , table , name = resource.name.split('.',3)
+    command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ database , table , @property_hash[:key] ] ]
+    Puppet::Util.execute(command)
+  end
+
   def initialize(value={})
     super(value)
     @property_flush = {}
