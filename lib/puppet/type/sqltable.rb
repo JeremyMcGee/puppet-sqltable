@@ -21,5 +21,9 @@ Puppet::Type.newtype(:sqltable) do
     desc "parameter description"
   end
 
+  newparam(:database) do
+    desc "database name"
+  end
+
 end
 

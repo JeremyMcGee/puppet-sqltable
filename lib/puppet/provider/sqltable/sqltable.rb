@@ -27,6 +27,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
         items = line.split("\t")
         resources << new( :name => "%s.%s.%s" % [ database , table , items[0] ] ,
                           :ensure => :present ,
+                          :database => database ,
                           :key => items[0] ,
                           :value => items[1] ,
                           :description => items[2] )
@@ -47,7 +48,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def flush
-    database = "puppettest"
+    database = @property_hash[:database]
     table = "Configuration"
 
     newvalueses = []
