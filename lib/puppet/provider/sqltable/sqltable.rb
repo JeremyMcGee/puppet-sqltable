@@ -1,6 +1,15 @@
 
 Puppet::Type.type(:sqltable).provide(:sqltable) do
 
+  def self.prefetch(resources)
+    keypairs = self.instances
+    resources.keys.each do |name|
+      if provider = keypairs.find{ |k| k.name == name }
+        resources[name].provider = provider
+      end
+    end
+  end
+
   def self.instances
     resources = []
 
@@ -36,12 +45,24 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     @property_hash[:key]
   end
 
+  def key=(newkey)
+    @property_hash[:key] = newkey
+  end
+
   def value
     @property_hash[:value]
   end
 
+  def value=(newvalue)
+    @property_hash[:value] = newvalue
+  end
+
   def description
     @property_hash[:description]
+  end
+
+  def description=(newdesc)
+    @property_hash[:description] = newdesc
   end
 
 end
