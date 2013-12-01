@@ -65,6 +65,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     database , table , name = resource.name.split('.',3)
     command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ database , table , @property_hash[:key] ] ]
     Puppet::Util.execute(command)
+    @property_hash.clear
   end
 
   def initialize(value={})
@@ -84,7 +85,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
       end
 
       command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ database , table , newvalueses.join(',') , @property_hash[:key] ] ]
-      Puppet::Util.execute(command).split("\n")
+      Puppet::Util.execute(command)
 
     end
 
