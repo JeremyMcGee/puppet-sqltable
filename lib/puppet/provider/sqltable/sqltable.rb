@@ -42,6 +42,25 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     !(@property_hash[:ensure] == :absent or @property_hash[:ensure].nil?)
   end
 
+  def create
+    database = resource[:database]
+    table = "Configuration"
+
+    columns = [ 'name' , 'value' , 'description' ]
+    propnames = [ :key , :value , :description ]
+    namesmap = Hash[ propnames.zip( columns ) ]
+
+    newvalueses = []
+    propnames.each do |k|
+      newvalueses << "%s='%s'" % [ namesmap[k] , resource[k] ]
+    end
+
+    command = ["mysql", "-e", "insert into %s.%s set %s" % [ database , table , newvalueses.join(',') ] ]
+    Puppet::Util.execute(command)
+
+    @property_hash = resource.to_hash
+  end
+
   def destroy
     database , table , name = resource.name.split('.',3)
     command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ database , table , @property_hash[:key] ] ]
