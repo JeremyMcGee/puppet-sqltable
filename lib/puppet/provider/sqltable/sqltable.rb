@@ -21,7 +21,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
 
       database = frm.split('/')[-2]
 
-      command = ["mysql", "-A", "-B", "-N", "-D", :puppettest, '-e', "select %s from %s.%s" % [ columns.join(",") , database , table ] ]
+      command = ["mysql", "-A", "-B", "-N", "-e", "select %s from %s.%s" % [ columns.join(",") , database , table ] ]
 
       Puppet::Util.execute(command).split("\n").each do |line|
         items = line.split("\t")
