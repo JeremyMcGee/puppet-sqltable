@@ -3,6 +3,8 @@ Puppet::Type.newtype(:sqltable) do
 
   @doc = "Manage key/value sql tables"
 
+  ensurable
+
   newproperty(:key) do
     desc "parameter name"
   end
@@ -32,6 +34,7 @@ Puppet::Type.newtype(:sqltable) do
         items = line.split("\t")
         name = "%s.%s.%s" % [ database , table , items[0] ]
         obj = Puppet::Resource.new('sltable', name )
+        obj[:ensure] = :present
         propnames.zip( items ).each{ |k,v| obj[k] = v }
         resources << obj
       end
