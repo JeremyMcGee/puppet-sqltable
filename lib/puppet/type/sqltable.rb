@@ -5,6 +5,10 @@ Puppet::Type.newtype(:sqltable) do
 
   ensurable
 
+  newparam(:name, :namevar => true) do
+    desc "resource name"
+  end
+
   newproperty(:key) do
     desc "parameter name"
   end
