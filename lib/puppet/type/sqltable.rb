@@ -20,7 +20,7 @@ Puppet::Type.newtype(:sqltable) do
 
     table = "Configuration"
     columns = [ 'name' , 'value' , 'description' ]
-    propnames = [ :keyname , :keyvalue , :keydescr ]
+    propnames = [ :key , :value , :description ]
 
     Dir.glob("/var/lib/mysql/*/%s.frm" % table).each do |frm|
 
