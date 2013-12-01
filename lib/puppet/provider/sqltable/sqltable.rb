@@ -51,13 +51,17 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     database = @property_hash[:database]
     table = "Configuration"
 
-    newvalueses = []
-    @property_flush.each do |k,v|
-      newvalueses << "%s='%s'" % [ k , v ]
-    end
+    if not @property_flush.empty?
 
-    command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ database , table , newvalueses.join(',') , @property_hash[:key] ] ]
-    Puppet::Util.execute(command).split("\n")
+      newvalueses = []
+      @property_flush.each do |k,v|
+        newvalueses << "%s='%s'" % [ k , v ]
+      end
+
+      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ database , table , newvalueses.join(',') , @property_hash[:key] ] ]
+      Puppet::Util.execute(command).split("\n")
+
+    end
 
     @property_hash = resource.to_hash
   end
