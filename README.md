@@ -1,5 +1,4 @@
-
-# sqltable puppet modle
+# sqltable puppet module
 
 Javier Palacios <javiplx@gmail.com>
 
