@@ -1,0 +1,8 @@
+name    'jpalacios-sqltable'
+version '0.8.0'
+source  'git@github.com:javiplx/puppet-sqltable.git'
+author  'jpalacios'
+license 'Apache License, Version 2.0'
+summary 'Manage configuration stored as sql table'
+description 'Module with a native type to manage sql tables with name/value configuration data. Typical usage is management of configuration of java webapps'
+project_page 'https://github.com/javiplx/puppet-sqltable/wiki'
