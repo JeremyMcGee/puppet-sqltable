@@ -43,7 +43,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def create
-    database = resource[:database]
+    database = resource[:database] || resource.name.split('.')[0]
     table = "Configuration"
 
     columns = [ 'name' , 'value' , 'description' ]
@@ -62,6 +62,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def destroy
+    # What about database given on resource description
     database , table , name = resource.name.split('.',3)
     command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ database , table , @property_hash[:key] ] ]
     Puppet::Util.execute(command)
@@ -74,7 +75,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def flush
-    database = @property_hash[:database]
+    database = @property_hash[:database] || resource.name.split('.')[0]
     table = "Configuration"
 
     if not @property_flush.empty?
