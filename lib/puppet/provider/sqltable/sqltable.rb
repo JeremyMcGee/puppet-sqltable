@@ -56,6 +56,12 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     end
 
     command = ["mysql", "-e", "insert into %s.%s set %s" % [ database , table , newvalueses.join(',') ] ]
+    if not resource[:username].empty?
+        command.push( "--user=%s" % resource[:username] )
+    end
+    if not resource[:password].empty?
+        command.push( "--password=%s" % resource[:password] )
+    end
     Puppet::Util.execute(command)
 
     @property_hash = resource.to_hash
@@ -65,6 +71,12 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     # What about database given on resource description
     database , table , name = resource.name.split('.',3)
     command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ database , table , @property_hash[:key] ] ]
+    if not resource[:username].empty?
+        command.push( "--user=%s" % resource[:username] )
+    end
+    if not resource[:password].empty?
+        command.push( "--password=%s" % resource[:password] )
+    end
     Puppet::Util.execute(command)
     @property_hash.clear
   end
