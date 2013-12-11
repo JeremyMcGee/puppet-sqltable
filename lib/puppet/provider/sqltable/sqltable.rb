@@ -27,8 +27,6 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
         items = line.split("\t")
         resources << new( :name => "%s.%s.%s" % [ database , table , items[0] ] ,
                           :ensure => :present ,
-                          :database => database ,
-                          :key => items[0] ,
                           :value => items[1] ,
                           :description => items[2] )
       end
@@ -43,7 +41,6 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def create
-    database = resource[:database] || resource.name.split('.')[0]
     table = "Configuration"
 
     columns = [ 'name' , 'value' , 'description' ]
@@ -55,16 +52,14 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
       newvalueses << "%s='%s'" % [ namesmap[k] , resource[k] ]
     end
 
-    command = ["mysql", "-e", "insert into %s.%s set %s" % [ database , table , newvalueses.join(',') ] ]
+    command = ["mysql", "-e", "insert into %s.%s set %s" % [ resource[:database] , table , newvalueses.join(',') ] ]
     Puppet::Util.execute(command)
 
     @property_hash = resource.to_hash
   end
 
   def destroy
-    # What about database given on resource description
-    database , table , name = resource.name.split('.',3)
-    command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ database , table , @property_hash[:key] ] ]
+    command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ @property_hash[:database] , table , @property_hash[:key] ] ]
     Puppet::Util.execute(command)
     @property_hash.clear
   end
@@ -75,7 +70,6 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def flush
-    database = @property_hash[:database] || resource.name.split('.')[0]
     table = "Configuration"
 
     if not @property_flush.empty?
@@ -85,7 +79,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
         newvalueses << "%s='%s'" % [ k , v ]
       end
 
-      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ database , table , newvalueses.join(',') , @property_hash[:key] ] ]
+      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ @property_hash[database] , table , newvalueses.join(',') , @property_hash[:key] ] ]
       Puppet::Util.execute(command)
 
     end

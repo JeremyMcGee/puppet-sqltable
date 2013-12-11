@@ -7,6 +7,13 @@ Puppet::Type.newtype(:sqltable) do
 
   newparam(:name, :namevar => true) do
     desc "resource name"
+    validate do |value|
+      components = value.split('.')
+      if components.length == 3
+        resource[:database] = components[0]
+        resource[:key] = components[2]
+      end
+    end
   end
 
   newproperty(:key) do
