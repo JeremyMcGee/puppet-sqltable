@@ -98,6 +98,12 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
       end
 
       command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ database , table , newvalueses.join(',') , @property_hash[:key] ] ]
+      if not resource[:username].empty?
+        command.push( "--user=%s" % resource[:username] )
+      end
+      if not resource[:password].empty?
+        command.push( "--password=%s" % resource[:password] )
+      end
       Puppet::Util.execute(command)
 
     end
