@@ -7,7 +7,7 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
                      :name   => 'example.Configuration.thekey',
                      :ensure => :present ,
                      :key    => "thekey" ,
-                     :value  => "thevalue"
+                     :value  => "thevalue" ,
                      :database => "example" ,
                      :description => "description of key"
                    )
