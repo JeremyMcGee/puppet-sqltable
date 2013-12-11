@@ -1,1 +1,1 @@
-gem "rspec", "~2"
+gem "rspec", "~> 2.8.0"
