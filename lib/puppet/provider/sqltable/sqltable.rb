@@ -56,10 +56,10 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     end
 
     command = ["mysql", "-e", "insert into %s.%s set %s" % [ database , table , newvalueses.join(',') ] ]
-    if not resource[:username].empty?
+    if not resource[:username].to_s.empty?
         command.push( "--user=%s" % resource[:username] )
     end
-    if not resource[:password].empty?
+    if not resource[:password].to_s.empty?
         command.push( "--password=%s" % resource[:password] )
     end
     Puppet::Util.execute(command)
@@ -71,10 +71,10 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     # What about database given on resource description
     database , table , name = resource.name.split('.',3)
     command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ database , table , @property_hash[:key] ] ]
-    if not resource[:username].empty?
+    if not resource[:username].to_s.empty?
         command.push( "--user=%s" % resource[:username] )
     end
-    if not resource[:password].empty?
+    if not resource[:password].to_s.empty?
         command.push( "--password=%s" % resource[:password] )
     end
     Puppet::Util.execute(command)
@@ -98,10 +98,10 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
       end
 
       command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ database , table , newvalueses.join(',') , @property_hash[:key] ] ]
-      if not resource[:username].empty?
+      if not resource[:username].to_s.empty?
         command.push( "--user=%s" % resource[:username] )
       end
-      if not resource[:password].empty?
+      if not resource[:password].to_s.empty?
         command.push( "--password=%s" % resource[:password] )
       end
       Puppet::Util.execute(command)
