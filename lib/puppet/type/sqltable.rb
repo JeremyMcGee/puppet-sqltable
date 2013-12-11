@@ -5,6 +5,13 @@ Puppet::Type.newtype(:sqltable) do
 
   ensurable
 
+  # Workaround until issue #4049 gets fixed
+  validate do
+    required_params = [ :key , :database ]
+    missing = required_params.select{ |param| self[param].nil? }
+    fail( '%s: %s required' % [ self , missing.join(", ") ] ) unless missing.empty?
+  end
+
   newparam(:name, :namevar => true) do
     desc "resource name"
     validate do |value|
@@ -16,7 +23,7 @@ Puppet::Type.newtype(:sqltable) do
     end
   end
 
-  newproperty(:key) do
+  newproperty(:key, :required => true ) do
     desc "parameter name"
     validate do |value|
       if not resource[:key].nil? and value != resource[:key]
@@ -33,7 +40,7 @@ Puppet::Type.newtype(:sqltable) do
     desc "parameter description"
   end
 
-  newparam(:database) do
+  newparam(:database, :required => true ) do
     desc "database name"
     validate do |value|
       if not resource[:database].nil? and value != resource[:database]
