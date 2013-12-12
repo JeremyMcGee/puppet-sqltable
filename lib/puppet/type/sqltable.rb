@@ -49,5 +49,13 @@ Puppet::Type.newtype(:sqltable) do
     end
   end
 
+  newparam(:username) do
+    desc "database user"
+  end
+
+  newparam(:password) do
+    desc "database password"
+  end
+
 end
 
