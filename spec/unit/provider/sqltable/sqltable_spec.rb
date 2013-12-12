@@ -28,6 +28,11 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
     end
   end
 
+  it "should add a row" do
+    Puppet::Util.expects(:execute).with(["mysql", "-e", "insert into example.Config set name='thekey',value='thevalue',description='description of key'"])
+    @provider.create.should == @resource.to_hash
+  end
+
   it "should remove a row" do
     Puppet::Util.expects(:execute).with(["mysql", "-e", "delete from example.Config where name='thekey'"])
     @provider.destroy == {}
