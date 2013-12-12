@@ -41,7 +41,6 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def create
-    table = "Configuration"
 
     columns = [ 'name' , 'value' , 'description' ]
     propnames = [ :key , :value , :description ]
@@ -52,7 +51,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
       newvalueses << "%s='%s'" % [ namesmap[k] , resource[k] ]
     end
 
-    command = ["mysql", "-e", "insert into %s.%s set %s" % [ resource[:database] , table , newvalueses.join(',') ] ]
+    command = ["mysql", "-e", "insert into %s.%s set %s" % [ resource[:database] , resource[:table] , newvalueses.join(',') ] ]
     if not resource[:username].to_s.empty?
         command.push( "--user=%s" % resource[:username] )
     end
@@ -65,9 +64,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def destroy
-    # What about database given on resource description
-    database , table , name = resource.name.split('.',3)
-    command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ @property_hash[:database] , table , @property_hash[:key] ] ]
+    command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ @property_hash[:database] , resource[:table] , @property_hash[:key] ] ]
     if not resource[:username].to_s.empty?
         command.push( "--user=%s" % resource[:username] )
     end
@@ -84,7 +81,6 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
   end
 
   def flush
-    table = "Configuration"
 
     if not @property_flush.empty?
 
@@ -93,7 +89,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
         newvalueses << "%s='%s'" % [ k , v ]
       end
 
-      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ @property_hash[database] , table , newvalueses.join(',') , @property_hash[:key] ] ]
+      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ @property_hash[database] , @property_hash[table] , newvalueses.join(',') , @property_hash[:key] ] ]
       if not resource[:username].to_s.empty?
         command.push( "--user=%s" % resource[:username] )
       end
