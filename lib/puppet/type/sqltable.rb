@@ -40,6 +40,11 @@ Puppet::Type.newtype(:sqltable) do
     desc "parameter description"
   end
 
+  newparam(:table) do
+    desc "database table"
+    defaultto :Configuration
+  end
+
   newparam(:database, :required => true ) do
     desc "database name"
     validate do |value|
