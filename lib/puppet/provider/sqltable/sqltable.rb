@@ -27,6 +27,8 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
         items = line.split("\t")
         resources << new( :name => "%s.%s.%s" % [ database , table , items[0] ] ,
                           :ensure => :present ,
+                          :database => database ,
+                          :key => items[0] ,
                           :value => items[1] ,
                           :description => items[2] )
       end
@@ -89,7 +91,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
         newvalueses << "%s='%s'" % [ k , v ]
       end
 
-      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ @property_hash[database] , @property_hash[table] , newvalueses.join(',') , @property_hash[:key] ] ]
+      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ @property_hash[:database] , @property_hash[table] , newvalueses.join(',') , @property_hash[:key] ] ]
       if not resource[:username].to_s.empty?
         command.push( "--user=%s" % resource[:username] )
       end
