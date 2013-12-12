@@ -62,6 +62,10 @@ Puppet::Type.newtype(:sqltable) do
     end
   end
 
+  newparam(:hostname) do
+    desc "remote database server"
+  end
+
   newparam(:username) do
     desc "database user"
   end
