@@ -35,7 +35,7 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
 
   it "should remove a row" do
     Puppet::Util.expects(:execute).with(["mysql", "-e", "delete from example.Config where name='thekey'"])
-    @provider.destroy == {}
+    @provider.destroy.should == {}
   end
 
 end
