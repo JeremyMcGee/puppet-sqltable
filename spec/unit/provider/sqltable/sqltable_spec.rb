@@ -12,6 +12,8 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
                      :description => "description of key"
                    )
     @provider = described_class.new( @resource )
+    # Required for destroy test
+    @provider.instance_variable_get('@property_hash')[:key] = @resource[:key]
   end
 
   [ :create,
