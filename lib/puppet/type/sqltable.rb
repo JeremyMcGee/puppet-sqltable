@@ -5,12 +5,31 @@ Puppet::Type.newtype(:sqltable) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "resource name"
+  # Workaround until issue #4049 gets fixed
+  validate do
+    required_params = [ :key , :database ]
+    missing = required_params.select{ |param| self[param].nil? }
+    fail( '%s: %s required' % [ self , missing.join(", ") ] ) unless missing.empty?
   end
 
-  newproperty(:key) do
+  newparam(:name, :namevar => true) do
+    desc "resource name"
+    validate do |value|
+      components = value.split('.')
+      if components.length == 3
+        resource[:database] = components[0]
+        resource[:key] = components[2]
+      end
+    end
+  end
+
+  newproperty(:key, :required => true ) do
     desc "parameter name"
+    validate do |value|
+      if not resource[:key].nil? and value != resource[:key]
+        fail( "Conflicting values for key name : %s vs %s" % [ value , resource[:key] ] )
+      end
+    end
   end
 
   newproperty(:value) do
@@ -21,8 +40,13 @@ Puppet::Type.newtype(:sqltable) do
     desc "parameter description"
   end
 
-  newparam(:database) do
+  newparam(:database, :required => true ) do
     desc "database name"
+    validate do |value|
+      if not resource[:database].nil? and value != resource[:database]
+        fail( "Conflicting values for database : %s vs %s" % [ value , resource[:database] ] )
+      end
+    end
   end
 
   newparam(:username) do
