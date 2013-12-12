@@ -18,6 +18,7 @@ Puppet::Type.newtype(:sqltable) do
       components = value.split('.')
       if components.length == 3
         resource[:database] = components[0]
+        resource[:table] = components[1]
         resource[:key] = components[2]
       end
     end
@@ -43,6 +44,13 @@ Puppet::Type.newtype(:sqltable) do
   newparam(:table) do
     desc "database table"
     defaultto :Configuration
+    validate do |value|
+      if not resource[:table].nil?
+        if value != resource[:table]
+          fail( "Conflicting values for key name : %s vs %s" % [ value , resource[:table] ] )
+        end
+      end
+    end
   end
 
   newparam(:database, :required => true ) do
