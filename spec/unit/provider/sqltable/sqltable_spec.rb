@@ -25,12 +25,12 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
     end
 
     before do
-      Dir.expects(:glob).with("/var/lib/mysql/*/Configuration.frm"). \
-        returns(['/var/lib/mysql/test/Configuration.frm','/var/lib/mysql/example/Configuration.frm'])
+      Dir.stub(:glob).with("/var/lib/mysql/*/Configuration.frm"). \
+        and_return(['/var/lib/mysql/test/Configuration.frm','/var/lib/mysql/example/Configuration.frm'])
       command = ["mysql", "-A", "-B", "-N"]
       query = "select name,value,description from %s.Configuration"
-      Puppet::Util.expects(:execute).with( command + ["-e", query % "test"]).returns(table_content)
-      Puppet::Util.expects(:execute).with( command + ["-e", query % "example"]).returns('k		desc')
+      Puppet::Util.stub(:execute).with( command + ["-e", query % "test"]).and_return(table_content)
+      Puppet::Util.stub(:execute).with( command + ["-e", query % "example"]).and_return('k		desc')
     end
 
     it "gets three resources" do
