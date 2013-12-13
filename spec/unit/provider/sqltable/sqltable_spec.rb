@@ -13,10 +13,6 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
                      :description => "description of key"
                    )
     @provider = described_class.new( @resource )
-    # Required for destroy test
-    @provider.instance_variable_get('@property_hash')[:database] = @resource[:database]
-    @provider.instance_variable_get('@property_hash')[:table] = @resource[:table]
-    @provider.instance_variable_get('@property_hash')[:key] = @resource[:key]
   end
 
   [ :exists?
@@ -34,6 +30,11 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
   end
 
   describe "#destroy" do
+   before do
+    @provider.instance_variable_get('@property_hash')[:database] = @resource[:database]
+    @provider.instance_variable_get('@property_hash')[:table] = @resource[:table]
+    @provider.instance_variable_get('@property_hash')[:key] = @resource[:key]
+   end
    it "should remove a row" do
     Puppet::Util.expects(:execute).with(["mysql", "-e", "delete from example.Config where name='thekey'"])
     @provider.destroy.should == {}
