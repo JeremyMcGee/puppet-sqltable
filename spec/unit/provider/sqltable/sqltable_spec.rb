@@ -82,4 +82,15 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
    end
   end
 
+  describe "#flush" do
+    before do
+      @provider.instance_variable_set(:@property_hash, @resource.to_hash )
+      @provider.instance_variable_set(:@property_flush, { :value => "new_value" } )
+      Puppet::Util.expects(:execute).with(["mysql", "-e", "update example.Config set value='new_value' where name='thekey'"])
+    end
+    it "modifies value" do
+      @provider.flush[:value].should == "new_value"
+    end
+  end
+
 end
