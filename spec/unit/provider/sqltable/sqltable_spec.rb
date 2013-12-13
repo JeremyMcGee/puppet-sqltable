@@ -15,13 +15,6 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
     @provider = described_class.new( @resource )
   end
 
-  [ :exists?
-    ].each do |method|
-    it "should respond to method #{method} called" do
-      @provider.should respond_to(method)
-    end
-  end
-
   describe "#instances" do
 
     let (:table_content) do
@@ -48,6 +41,24 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
       described_class.instances.each do |instance|
         instance.should be_a(described_class)
       end
+    end
+
+  end
+
+  describe '#exists?' do
+
+    it "gets false if ensure not defined" do
+      @provider.exists?.should be_false
+    end
+
+    it "gets false if declared absent" do
+      @provider.instance_variable_get('@property_hash')[:ensure] = :absent
+      @provider.exists?.should be_false
+    end
+
+    it "gets false if declared present" do
+      @provider.instance_variable_get('@property_hash')[:ensure] = :present
+      @provider.exists?.should be_true
     end
 
   end
