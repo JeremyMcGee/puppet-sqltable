@@ -109,6 +109,10 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
       end
       Puppet::Util.execute(command)
 
+      @property_flush.each do |k,v|
+        resource[k] = v
+      end
+
     end
 
     @property_hash = resource.to_hash
