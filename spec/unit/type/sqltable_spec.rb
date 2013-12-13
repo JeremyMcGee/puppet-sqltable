@@ -1,11 +1,9 @@
 require 'spec_helper'
 
-sqltable = Puppet::Type.type(:sqltable)
-
-describe sqltable do
+describe Puppet::Type.type(:sqltable) do
 
   it "should have a default provider" do
-    Puppet::Type.type(:sqltable).defaultprovider.should_not be_nil
+    described_class.defaultprovider.should_not be_nil
   end
 
   describe "basic structure" do
@@ -14,18 +12,18 @@ describe sqltable do
     properties = [:key, :value, :description]
 
     it "should have an ensure property" do
-      Puppet::Type.type(:sqltable).attrtype(:ensure).should == :property
+      described_class.attrtype(:ensure).should == :property
     end
 
     properties.each do |param|
       it "should have a #{param} property" do
-        Puppet::Type.type(:sqltable).attrtype(param).should == :property
+        described_class.attrtype(param).should == :property
       end
     end
 
     parameters.each do |param|
       it "should have a #{param} parameter" do
-        Puppet::Type.type(:sqltable).attrtype(param).should == :param
+        described_class.attrtype(param).should == :param
       end
     end
 
