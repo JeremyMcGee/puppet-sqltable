@@ -97,7 +97,7 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
         newvalueses << "%s='%s'" % [ k , v ]
       end
 
-      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ @property_hash[:database] , @property_hash[table] , newvalueses.join(',') , @property_hash[:key] ] ]
+      command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ @property_hash[:database] , @property_hash[:table] , newvalueses.join(',') , @property_hash[:key] ] ]
       if not resource[:host].to_s.empty?
         command.push( "--host=%s" % resource[:host] )
       end
