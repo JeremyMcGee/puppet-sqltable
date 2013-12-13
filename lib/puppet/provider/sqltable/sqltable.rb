@@ -54,11 +54,11 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
     end
 
     command = ["mysql", "-e", "insert into %s.%s set %s" % [ resource[:database] , resource[:table] , newvalueses.join(',') ] ]
-    if not resource[:hostname].to_s.empty?
-      command.push( "--host=%s" % resource[:hostname] )
+    if not resource[:host].to_s.empty?
+      command.push( "--host=%s" % resource[:host] )
     end
-    if not resource[:username].to_s.empty?
-        command.push( "--user=%s" % resource[:username] )
+    if not resource[:user].to_s.empty?
+        command.push( "--user=%s" % resource[:user] )
     end
     if not resource[:password].to_s.empty?
         command.push( "--password=%s" % resource[:password] )
@@ -70,11 +70,11 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
 
   def destroy
     command = ["mysql", "-e", "delete from %s.%s where name='%s'" % [ @property_hash[:database] , resource[:table] , @property_hash[:key] ] ]
-    if not resource[:hostname].to_s.empty?
-      command.push( "--host=%s" % resource[:hostname] )
+    if not resource[:host].to_s.empty?
+      command.push( "--host=%s" % resource[:host] )
     end
-    if not resource[:username].to_s.empty?
-        command.push( "--user=%s" % resource[:username] )
+    if not resource[:user].to_s.empty?
+        command.push( "--user=%s" % resource[:user] )
     end
     if not resource[:password].to_s.empty?
         command.push( "--password=%s" % resource[:password] )
@@ -98,11 +98,11 @@ Puppet::Type.type(:sqltable).provide(:sqltable) do
       end
 
       command = ["mysql", "-e", "update %s.%s set %s where name='%s'" % [ @property_hash[:database] , @property_hash[table] , newvalueses.join(',') , @property_hash[:key] ] ]
-      if not resource[:hostname].to_s.empty?
-        command.push( "--host=%s" % resource[:hostname] )
+      if not resource[:host].to_s.empty?
+        command.push( "--host=%s" % resource[:host] )
       end
-      if not resource[:username].to_s.empty?
-        command.push( "--user=%s" % resource[:username] )
+      if not resource[:user].to_s.empty?
+        command.push( "--user=%s" % resource[:user] )
       end
       if not resource[:password].to_s.empty?
         command.push( "--password=%s" % resource[:password] )

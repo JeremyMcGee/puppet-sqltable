@@ -10,7 +10,7 @@ describe sqltable do
 
   describe "basic structure" do
 
-    parameters = [:name, :database, :table, :username, :password, :hostname]
+    parameters = [:name, :database, :table, :user, :password, :host]
     properties = [:key, :value, :description]
 
     it "should have an ensure property" do
