@@ -22,6 +22,36 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
     end
   end
 
+  describe "#instances" do
+
+    let (:table_content) do
+      <<-TABLE
+	key1     value1       key description
+	key2     value2       second key description'
+	TABLE
+    end
+
+    before do
+      Dir.expects(:glob).with("/var/lib/mysql/*/Configuration.frm"). \
+        returns(['/var/lib/mysql/test/Configuration.frm','/var/lib/mysql/example/Configuration.frm'])
+      command = ["mysql", "-A", "-B", "-N"]
+      query = "select name,value,description from %s.Configuration"
+      Puppet::Util.expects(:execute).with( command + ["-e", query % "test"]).returns(table_content)
+      Puppet::Util.expects(:execute).with( command + ["-e", query % "example"]).returns('k		desc')
+    end
+
+    it "gets three resources" do
+      described_class.instances.should have(3).items
+    end
+
+    it "produces Sqltable instances" do
+      described_class.instances.each do |instance|
+        instance.should be_a(described_class)
+      end
+    end
+
+  end
+
   describe "#create" do
    it "should add a row" do
     Puppet::Util.expects(:execute).with(["mysql", "-e", "insert into example.Config set name='thekey',value='thevalue',description='description of key'"])
