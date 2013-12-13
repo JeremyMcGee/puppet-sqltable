@@ -19,23 +19,25 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
     @provider.instance_variable_get('@property_hash')[:key] = @resource[:key]
   end
 
-  [ :create,
-    :destroy,
-    :exists?
+  [ :exists?
     ].each do |method|
     it "should respond to method #{method} called" do
       @provider.should respond_to(method)
     end
   end
 
-  it "should add a row" do
+  describe "#create" do
+   it "should add a row" do
     Puppet::Util.expects(:execute).with(["mysql", "-e", "insert into example.Config set name='thekey',value='thevalue',description='description of key'"])
     @provider.create.should == @resource.to_hash
+   end
   end
 
-  it "should remove a row" do
+  describe "#destroy" do
+   it "should remove a row" do
     Puppet::Util.expects(:execute).with(["mysql", "-e", "delete from example.Config where name='thekey'"])
     @provider.destroy.should == {}
+   end
   end
 
 end
