@@ -8,25 +8,28 @@ The purpose of this module is to manage simple sql tables that store configurati
 
 ## Limitations
 
-The module only works with mysql, and only manages tables named *Configuration*.
+The module only works with mysql.
 
 ## Resource definition
 
+If the title has the form **database.table.keyname**, it is parsed to fill other parameters, but only *table* has a default value (*Configuration*). An error is raised if the parameters are explicitly declared and do not match those coming from title.
+
 Resource description to create and delete a parameter looks like 
 
-    sqltable { 'example.Configuration.parameter':
+    sqltable { 'parameter':
       ensure      => 'present',
       key         => 'parameter_name',
       value       => 'parameter-value',
       description => 'Description of the parameter',
-      database    => 'example'
+      database    => 'example',
+      table       => 'Config'
     }
-
+    
     sqltable { 'example.Configuration.obsolete_parameter':
       ensure      => 'absent'
     }
 
-If no database is specified, it is taken from the first part of the resource title.
+There are also parameters to specify *host*, *user* and *password* required to connect to the database server.
 
 ## Resource discovering
 
