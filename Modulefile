@@ -1,5 +1,5 @@
 name    'jpalacios-sqltable'
-version '0.8.0'
+version '1.0.0'
 source  'git@github.com:javiplx/puppet-sqltable.git'
 author  'jpalacios'
 license 'Apache License, Version 2.0'
