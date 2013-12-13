@@ -56,7 +56,7 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
       @provider.exists?.should be_false
     end
 
-    it "gets false if declared present" do
+    it "gets true if declared present" do
       @provider.instance_variable_get('@property_hash')[:ensure] = :present
       @provider.exists?.should be_true
     end
@@ -64,7 +64,7 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
   end
 
   describe "#create" do
-   it "should add a row" do
+   it "should add a table row" do
     Puppet::Util.expects(:execute).with(["mysql", "-e", "insert into example.Config set name='thekey',value='thevalue',description='description of key'"])
     @provider.create.should == @resource.to_hash
    end
@@ -76,7 +76,7 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
     @provider.instance_variable_get('@property_hash')[:table] = @resource[:table]
     @provider.instance_variable_get('@property_hash')[:key] = @resource[:key]
    end
-   it "should remove a row" do
+   it "should remove a table row" do
     Puppet::Util.expects(:execute).with(["mysql", "-e", "delete from example.Config where name='thekey'"])
     @provider.destroy.should == {}
    end
@@ -88,7 +88,7 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
       @provider.instance_variable_set(:@property_flush, { :value => "new_value" } )
       Puppet::Util.expects(:execute).with(["mysql", "-e", "update example.Config set value='new_value' where name='thekey'"])
     end
-    it "modifies value" do
+    it "updates database record" do
       @provider.flush[:value].should == "new_value"
     end
   end
