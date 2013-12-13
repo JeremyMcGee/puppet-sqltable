@@ -72,12 +72,10 @@ describe Puppet::Type.type(:sqltable).provider(:sqltable) do
 
   describe "#destroy" do
    before do
-    @provider.instance_variable_get('@property_hash')[:database] = @resource[:database]
-    @provider.instance_variable_get('@property_hash')[:table] = @resource[:table]
-    @provider.instance_variable_get('@property_hash')[:key] = @resource[:key]
+    @provider.instance_variable_set(:@property_hash, @resource.to_hash )
+    Puppet::Util.expects(:execute).with(["mysql", "-e", "delete from example.Config where name='thekey'"])
    end
    it "should remove a table row" do
-    Puppet::Util.expects(:execute).with(["mysql", "-e", "delete from example.Config where name='thekey'"])
     @provider.destroy.should == {}
    end
   end
